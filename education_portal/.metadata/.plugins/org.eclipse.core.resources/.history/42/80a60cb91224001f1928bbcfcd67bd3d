@@ -1,0 +1,10 @@
+spring.application.name=education_portal
+
+server.port=9093
+spring.datasource.url=jdbc:postgresql://localhost:5432/educationportal
+spring.datasource.username=eduportal1
+spring.datasource.password=eduportal123
+spring.jpa.hibernate.ddl-auto=create
+spring.jpa.show-sql=true
+
+spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
