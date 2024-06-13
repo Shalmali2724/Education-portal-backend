@@ -12,4 +12,5 @@ public interface ICartService {
     Cart getCartById(int cartId);
     List<Cart> getCartDetailsByUserId(int userId);
     public Cart addCourseToCart(int userId, int courseId);
+	String deleteCoursefromCart(int courseId);
 }

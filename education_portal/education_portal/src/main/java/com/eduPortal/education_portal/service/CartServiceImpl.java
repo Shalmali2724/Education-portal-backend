@@ -10,6 +10,8 @@ import com.eduPortal.education_portal.entity.Cart;
 import com.eduPortal.education_portal.entity.Course;
 import com.eduPortal.education_portal.entity.UserEdu;
 import com.eduPortal.education_portal.exception.CartGetException;
+import com.eduPortal.education_portal.exception.CourseAlreadyExistException;
+import com.eduPortal.education_portal.exception.CourseNotFoundException;
 import com.eduPortal.education_portal.exception.UserNotFoundException;
 import com.eduPortal.education_portal.repository.CartRepository;
 import com.eduPortal.education_portal.repository.CourseRepository;
@@ -33,8 +35,16 @@ public class CartServiceImpl implements ICartService {
     
     public Cart addCourseToCart(int userId, int courseId) {
         UserEdu user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("User not found"));
-        Course course = courseRepository.findById(courseId).orElseThrow(() -> new RuntimeException("Course not found"));
-
+        Course course = courseRepository.findById(courseId).orElseThrow(() -> new CourseNotFoundException("Course not found"));
+        Optional<Cart> optionalCart=cartRepository.findByCourse(course);
+        
+      if(optionalCart.isPresent()) {
+    	  Cart existingCart = optionalCart.get();
+          int existingCartUserId = existingCart.getUser().getId();
+          if (existingCartUserId == userId) {
+              throw new CourseAlreadyExistException("You Have Already Added this Course To Cart !!");
+          }
+      }
         Cart cart = new Cart();
         cart.setUser(user);
         cart.setCourse(course);
@@ -84,9 +94,38 @@ public class CartServiceImpl implements ICartService {
                }
 		return list.get();
 	}
+
+	@Override
+	public String deleteCoursefromCart(int courseId) {
+Course course = courseRepository.findById(courseId).orElseThrow(() -> new CourseNotFoundException("Course not found"));
+  Optional<Cart> optionalCart =cartRepository.findByCourse(course);
+  if(optionalCart.isEmpty())
+  {
+	  throw new CourseNotFoundException("Course not found");
+  }
+  
+  cartRepository.delete(optionalCart.get());
+
+		
+		
+		return "Course Removed From cart !! ";
+	}
     
     
-    
+    public String DeleteFromCart(int userId) {
+    	
+        UserEdu user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("User not found"));
+             List<Cart> list=cartRepository.findByUser(user).orElseThrow(()->new UserNotFoundException("dont have any course In Cart"));
+//             for(ls:list) {
+//            	 cartRepository.delete(null);
+//             }
+             
+             cartRepository.deleteAll(list);
+             
+    	
+		return "removed succesfully";
+
+    }
 
 	
 }

@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -62,10 +63,17 @@ public class CourseController {
 	public ResponseEntity<List<Course> > getCourseByName(@PathVariable String title) {
 		List<Course> courses = iCourseService.getCourseByName(title);
 		
-		ResponseEntity<List<Course> >responseEntity = new ResponseEntity<>(courses, HttpStatus.FOUND);
+		ResponseEntity<List<Course> >responseEntity = new ResponseEntity<>(courses, HttpStatus.OK);
 		return responseEntity;
 
 }
+	
+	@DeleteMapping("/delete/bycourseid/{id}")
+	public ResponseEntity<String> deleteCourseByCourseId( @PathVariable int id) {
+		String str=iCourseService.deleteCourseByCourseId(id);
+		ResponseEntity<String> responseEntity = new ResponseEntity<>(str, HttpStatus.FOUND);
+		return responseEntity;
+	}
 	
 
 }

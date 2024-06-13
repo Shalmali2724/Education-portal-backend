@@ -32,6 +32,13 @@ public class GlobalExceptionHandler {
 		return responseEntity;
 	}
 	
+	@ExceptionHandler(CourseAlreadyExistException.class)
+	public ResponseEntity<String> handleCourseAlreadyExistException(Exception e) {
+	ResponseEntity<String> responseEntity = new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+		
+		return responseEntity;
+	}
+	
 	@ExceptionHandler(UserAlreadyRegistredException.class)
 	public ResponseEntity<String> handleUserAlreadyRegistredException(Exception e) {
 	ResponseEntity<String> responseEntity = new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);

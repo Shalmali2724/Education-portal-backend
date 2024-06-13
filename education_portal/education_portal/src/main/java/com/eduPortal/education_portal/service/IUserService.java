@@ -13,8 +13,9 @@ public interface IUserService {
 	UserEdu getUserById(int id);
     UserEdu updateUser(int id, UserEdu user);
     String deleteUser(int id);
-    PurchasedCourse purchaseCourse( int userId ,int courseId);
+    PurchasedCourse purchaseCourse( int userId);
     List<UserEdu> getAllUsers(int pageNumber,int pageSize);
+	PurchasedCourse viewPurchaseCourse(int userId);
 
 	
 }

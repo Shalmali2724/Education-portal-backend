@@ -7,10 +7,13 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import com.eduPortal.education_portal.entity.Cart;
+import com.eduPortal.education_portal.entity.Course;
 import com.eduPortal.education_portal.entity.UserEdu;
 
 @Repository
 public interface CartRepository extends JpaRepository<Cart,Integer>{
 	  Optional<List<Cart>> findByUser(UserEdu user);
+	  Optional<Cart>  findByCourse(Course course);
+	  long deleteByUser(UserEdu user);
 	  
 }

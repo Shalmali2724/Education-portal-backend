@@ -17,6 +17,7 @@ import com.eduPortal.education_portal.entity.PurchasedCourse;
 import com.eduPortal.education_portal.entity.UserEdu;
 import com.eduPortal.education_portal.exception.UserAlreadyRegistredException;
 import com.eduPortal.education_portal.exception.UserNotFoundException;
+import com.eduPortal.education_portal.repository.CartRepository;
 import com.eduPortal.education_portal.repository.PurchaseCourseRepository;
 import com.eduPortal.education_portal.repository.UserRepository;
 
@@ -25,7 +26,8 @@ public class UserServiceImpl implements IUserService {
 
 	@Autowired
 	private UserRepository userRepository;
-
+	@Autowired
+    private CartRepository cartRepository;
 	@Autowired 
 	private CartServiceImpl cartServiceImpl;
 	
@@ -45,13 +47,18 @@ public class UserServiceImpl implements IUserService {
 	@Override
 	public UserDto userLogin(String email, String password) {
 
-		Optional<UserEdu> optionalUser = userRepository.findByEmailAndPassword(email, password);
+		Optional<UserEdu> optionalUser = userRepository.findByEmail(email);
 		if (optionalUser.isEmpty()) {
-			throw new UserNotFoundException("Enter Valid EmailId & Password");
+			throw new UserNotFoundException("Enter Valid EmailId ");
 		}
+		
 		UserEdu user = optionalUser.get();
+		if(!user.getPassword().equals(password))
+		{
+			throw new UserNotFoundException("Enter Valid  password ");
+		}
+		
 		UserDto userDto = new UserDto();
-
 		userDto.setId(user.getId());
 		userDto.setUserName(user.getUserName());
 		userDto.setEmail(email);
@@ -100,7 +107,7 @@ public class UserServiceImpl implements IUserService {
 	}
 
 	@Override
-	public PurchasedCourse purchaseCourse(int userId ,int courseId) {
+	public PurchasedCourse purchaseCourse(int userId ) {
 		
 	List<Cart> list=cartServiceImpl.getCartDetailsByUserId(userId);	
 	double totalPrice=0.0;
@@ -116,6 +123,7 @@ public class UserServiceImpl implements IUserService {
 		pc.setTotalAmount(totalPrice);
 		pc.setCourse(arr);
 		purchaseCourseRepository.save(pc);
+		cartRepository.deleteAll(list);
 		
 		return pc;
 	 
@@ -133,6 +141,16 @@ public class UserServiceImpl implements IUserService {
 		}
 		
 		return list;
+	}
+
+	@Override
+	public PurchasedCourse viewPurchaseCourse(int userId) {
+		
+        UserEdu user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("User not found"));
+
+		
+		
+		return null;
 	}
 
 }

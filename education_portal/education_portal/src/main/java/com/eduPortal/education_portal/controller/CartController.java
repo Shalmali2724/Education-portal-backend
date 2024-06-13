@@ -19,17 +19,17 @@ public class CartController {
 
 	//Method to add course to cart
 	@PostMapping("/add/{userId}/{courseId}")
-	public ResponseEntity<Cart> addCourseToCart(@PathVariable int userId, @PathVariable int courseId) {
+	public ResponseEntity<String> addCourseToCart(@PathVariable int userId, @PathVariable int courseId) {
 		Cart newCart = cartService.addCourseToCart(userId, courseId);
-		return new ResponseEntity<>(newCart, HttpStatus.CREATED);
+		return new ResponseEntity<String>("Added to cart !! ", HttpStatus.CREATED);
 	}
 	
 	//This method return List of cart Which is used by user for purchasing the course
 	@GetMapping("/get/byUserId/{userId}")
-	public ResponseEntity<List<Cart>> getCartDetailsByUserId(@PathVariable int userId)
+	public ResponseEntity<List<Cart> > getCartDetailsByUserId(@PathVariable int userId)
 	{
 		List<Cart> list=cartService.getCartDetailsByUserId(userId);
-		return new ResponseEntity<List<Cart>>(list, HttpStatus.FOUND);
+		return new ResponseEntity<List<Cart>>(list, HttpStatus.OK);
 	}
 
 	@PutMapping("/update/{cartId}")
@@ -48,6 +48,12 @@ public class CartController {
 	public ResponseEntity<Cart> getCartById(@PathVariable int cartId) {
 		Cart cart = cartService.getCartById(cartId);
 		return new ResponseEntity<>(cart, HttpStatus.OK);
+	}
+	
+	@DeleteMapping("/delete/course/CourseId/{courseId}")
+	public ResponseEntity<String> deleteCoursefromCart(@PathVariable int courseId) {
+		String msg = cartService.deleteCoursefromCart(courseId);
+		return new ResponseEntity<>(msg, HttpStatus.OK);
 	}
 
 }

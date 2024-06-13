@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.eduPortal.education_portal.dto.UserDto;
@@ -39,26 +40,37 @@ public class UserController {
 	}
 	
 	
-	@GetMapping("/login/{email}/{password}")
-	public ResponseEntity<?> UserLogin(@PathVariable String email, @PathVariable String password)
+	@GetMapping("/login")
+	public ResponseEntity<UserDto> UserLogin(@RequestParam String emailId, @RequestParam String password)
 	{
-		UserDto userDto =iUserService.userLogin(email,password);
-	     ResponseEntity<?> responseEntity = new ResponseEntity<>(userDto, HttpStatus.OK);
+		UserDto userDto =iUserService.userLogin(emailId,password);
+	     ResponseEntity<UserDto> responseEntity = new ResponseEntity<>(userDto, HttpStatus.OK);
 			return responseEntity;	
 	}
 	
 	
 
-  @GetMapping("/purchaseCourse/{userId}/{courseId}")
-  public ResponseEntity<PurchasedCourse> purchaseCourse( @PathVariable int userId ,@PathVariable int courseId)
+  @GetMapping("/purchaseCourse/{userId}")
+  public ResponseEntity<PurchasedCourse> purchaseCourse( @PathVariable int userId)
   {
-		PurchasedCourse pc =iUserService.purchaseCourse(userId, courseId);
+		PurchasedCourse pc =iUserService.purchaseCourse(userId);
 	    ResponseEntity<PurchasedCourse> responseEntity = new ResponseEntity<>(pc, HttpStatus.OK);
 	    return responseEntity;	
 
  }
+
 	
-	
+
+  @GetMapping("/view/PurchasedCourse/{userId}")
+  public ResponseEntity<PurchasedCourse> viewPurchaseCourse( @PathVariable int userId)
+  {
+		PurchasedCourse pc =iUserService.viewPurchaseCourse(userId);
+	    ResponseEntity<PurchasedCourse> responseEntity = new ResponseEntity<>(pc, HttpStatus.OK);
+	    return responseEntity;	
+
+ }
+  
+  
 	@GetMapping("/getbyid/{id}")
 	public ResponseEntity<?> getUserById(@PathVariable int id)
 	{
@@ -66,6 +78,8 @@ public class UserController {
 	    ResponseEntity<?> responseEntity = new ResponseEntity<>(userEdu, HttpStatus.FOUND);
 	    return responseEntity;	
 	}
+	
+	
 	
 	@PutMapping("/update/{id}")
 	public ResponseEntity<?> updateUser(@PathVariable int id,@RequestBody UserEdu user) {
